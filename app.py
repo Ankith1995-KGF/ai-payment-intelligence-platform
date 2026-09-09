@@ -1,5 +1,6 @@
 import streamlit as st
 import importlib.util
+import pickle
 
 st.set_page_config(
     page_title="AI Payment Intelligence Platform",
@@ -7,8 +8,9 @@ st.set_page_config(
 )
 
 st.title("AI Payment Intelligence Platform")
-st.write("Loading payment intelligence recovery module...")
+st.write("Loading payment intelligence platform...")
 
+# Load recovery module
 spec = importlib.util.spec_from_file_location(
     "payment_recovery",
     "payment_platform_FINAL_RECOVERY.txt.py"
@@ -17,5 +19,15 @@ spec = importlib.util.spec_from_file_location(
 payment_recovery = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(payment_recovery)
 
-st.success("Recovery module loaded successfully.")
-st.write("The backend module is available. Next, we can connect its functions to this Streamlit interface.")
+# Load deployment state
+with open("payment_platform_1M_DEPLOYMENT_STATE.pkl", "rb") as f:
+    checkpoint = pickle.load(f)
+
+# Restore runtime state
+restore_info = payment_recovery.restore_runtime_state(checkpoint)
+
+st.success("Payment intelligence platform loaded successfully.")
+
+st.subheader("Deployment State")
+
+st.write(restore_info)
