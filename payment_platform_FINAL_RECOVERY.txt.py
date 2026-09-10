@@ -17,6 +17,7 @@ Gemini credentials are intentionally NOT stored in either file.
 """
 
 import pandas as pd
+import xgboost as xgb
 import numpy as np
 import shap
 import json
@@ -690,9 +691,12 @@ def run_fraud_sandbox(
     # --------------------------------------------------
 
     risk_score = float(
-        model.predict_proba(
-            sandbox_encoded
-        )[0, 1]
+        model.get_booster().predict(
+            xgb.DMatrix(
+                sandbox_encoded,
+                feature_names=sandbox_encoded.columns.tolist()
+            )
+        )[0]
     )
 
 
@@ -827,7 +831,7 @@ def run_fraud_sandbox(
         if technical_feature == "transaction_hour":
 
             return txn_datetime.strftime(
-                "%-I:%M %p"
+                "%I:%M %p"
             )
 
 
@@ -1125,7 +1129,7 @@ def build_sandbox_evidence(
 
             "transaction_time":
                 txn_datetime.strftime(
-                    "%-I:%M %p"
+                    "%I:%M %p"
                 ),
 
             "country":
