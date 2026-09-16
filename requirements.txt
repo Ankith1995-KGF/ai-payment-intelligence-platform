@@ -1,10 +1,2 @@
-streamlit
-pandas
-numpy
-shap
-scikit-learn
-scipy
-numba
-joblib
-xgboost`r`ngoogle-genai
-
+xgboost
+google-genai
