@@ -6,4 +6,5 @@ scikit-learn
 scipy
 numba
 joblib
-xgboostgoogle-genai
+xgboost`r`ngoogle-genai
+
